@@ -3,14 +3,10 @@ require_relative 'lib/twitter_logic'
 
 require 'dotenv'
 require 'discordrb'
-#require 'GiphyClient'
 
 Dotenv.load
 
 bot = Discordrb::Bot.new token: ENV['DISCORD_TOKEN'], ignore_bots: true
-
-puts "debugging"
-rand = rand(1..20)
 
 # Monitor a given channel for a message that starts with 'Going live!' and send 
 # the message contents to the configured Twitter account
@@ -28,7 +24,7 @@ end
 # Commands will be messages that start with '!'
 bot.message(start_with:'!') do |event|
     command = event.message.content.split(' ')[0]
-    validate_command_and_set_messages(event, command)
+    validate_command_and_respond(event, command)
 end
 
 bot.run
