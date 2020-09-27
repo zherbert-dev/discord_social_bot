@@ -2,10 +2,13 @@ require_relative 'giphy_logic'
 require_relative '../modules/response'
 
 def welcome_new_member(event)
-    username = get_username_from_message_mentions
-    unless username.empty?
-        message = Response::WELCOME
-        event.channel.send_message(message)
+    unless get_username_from_message_mentions.nil?
+        begin
+            event.channel.send_message Response::WELCOME         
+        rescue => e
+            logger.error e.message
+            logger.error e.backtrace
+        end
     end
 end
 
@@ -36,7 +39,12 @@ def validate_command_and_respond(event, command)
 end
 
 def respond_to_command(event, message)
-    event.channel.send_message message
+    begin
+        event.channel.send_message message
+    rescue => e
+        logger.error e.message
+        logger.error e.backtrace
+    end
 end
 
 def roll_d_twenty

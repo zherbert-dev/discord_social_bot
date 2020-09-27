@@ -10,5 +10,10 @@ def get_twitter_client
 end
 
 def create_twitter_post(client, event)
-    client.update(event.message.content)
+    begin
+        client.update(event.message.content)
+    rescue => e
+        logger.error e.message
+        logger.error e.backtrace
+    end
 end
