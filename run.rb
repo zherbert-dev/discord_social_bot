@@ -7,7 +7,7 @@ require 'dotenv'
 require 'discordrb'
 require 'redis'
 
-bot = Discordrb::Bot.new token: "NzU4MzI0NzA2NzUxMDIxMDU2.X2tS6w.WeavFgGkLkZpxcYUuwmYD63vXnI", ignore_bots: true
+bot = Discordrb::Bot.new token: "XXXXXXXXXXX", ignore_bots: true
 rc = Redis.new
 
 # Monitor a given channel for a message that starts with 'Going live!' and send 
