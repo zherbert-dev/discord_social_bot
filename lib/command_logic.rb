@@ -20,8 +20,6 @@ def validate_command_and_respond(event, command)
         message = Response::TWITCH
     when '!github'
         message = Response::GITHUB
-    when '!wisdom'
-        message = Response::UNDER_DEVELOPMENT
     when '!rolld20'
         value = roll_d_twenty
         message = Response::ROLL + value
