@@ -6,8 +6,13 @@ require_relative 'lib/twitter_logic'
 require 'dotenv'
 require 'discordrb'
 require 'redis'
+require 'logger'
+
+log = Logger.new('log.txt', 'weekly')
+log.level = Logger::WARN
 
 bot = Discordrb::Bot.new token: "XXXXXXXXXXX", ignore_bots: true
+
 rc = Redis.new
 
 # Monitor a given channel for a message that starts with 'Going live!' and send 

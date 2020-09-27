@@ -9,7 +9,12 @@ def add_points(r, event)
         new_points = r.hincrby(user.id.to_s, :points, 1)
         check_points(r, user, new_points, event)
     else
-        r.hmset(user.id.to_s, :user_name, event.user.username, :points, 1, :level, 0)
+        begin
+            r.hmset(user.id.to_s, :user_name, event.user.username, :points, 1, :level, 0)
+        rescue => e
+            logger.error e.message
+            logger.error e.backtrace
+        end
     end
 end
 
@@ -26,5 +31,10 @@ end
 
 def notify_level_up(event, new_level)
     username = event.user.username
-    event.channel.send_message("Congrats @#{username} -- you have increased to lvl #{new_level}!")
+    begin
+        event.channel.send_message("Congrats @#{username} -- you have increased to lvl #{new_level}!")
+    rescue => e
+        logger.error e.message
+        logger.error e.backtrace
+    end
 end
