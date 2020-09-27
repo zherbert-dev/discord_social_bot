@@ -1,5 +1,4 @@
 require_relative 'lib/command_logic'
-
 require_relative 'lib/level_up_logic'
 require_relative 'lib/twitter_logic'
 

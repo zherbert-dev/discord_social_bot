@@ -1,4 +1,3 @@
-require_relative 'giphy_logic'
 require_relative '../modules/response'
 
 def welcome_new_member(event)
@@ -21,10 +20,7 @@ def validate_command_and_respond(event, command)
     when '!github'
         message = Response::GITHUB
     when '!rolld20'
-        value = roll_d_twenty
-        message = Response::ROLL + value
-    when '!randomgif'
-        message = Response::UNDER_DEVELOPMENT
+        message = Response::ROLL + rolld20
     when '!pizza'
         message = Response::PIZZA_VIDEO
     when '!clear'
