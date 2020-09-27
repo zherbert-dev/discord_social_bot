@@ -1,4 +1,4 @@
-FROM alpine:3.2
+FROM alpine:3.12.0
 ENV BUILD_PACKAGES bash curl-dev ruby-dev build-base
 ENV RUBY_PACKAGES ruby ruby-io-console ruby-bundler
 
