@@ -4,3 +4,5 @@ gem 'discordrb'
 gem 'api-ai-ruby'
 gem 'twitter'
 gem 'dotenv'
+gem 'redis'
+

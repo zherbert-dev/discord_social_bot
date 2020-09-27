@@ -1,12 +1,14 @@
 require_relative 'lib/command_logic'
+
+require_relative 'lib/level_up_logic'
 require_relative 'lib/twitter_logic'
 
 require 'dotenv'
 require 'discordrb'
+require 'redis'
 
-Dotenv.load
-
-bot = Discordrb::Bot.new token: ENV['DISCORD_TOKEN'], ignore_bots: true
+bot = Discordrb::Bot.new token: "XXXXX", ignore_bots: true
+redis_connection = Redis.new
 
 # Monitor a given channel for a message that starts with 'Going live!' and send 
 # the message contents to the configured Twitter account
@@ -25,6 +27,7 @@ end
 bot.message(start_with:'!') do |event|
     command = event.message.content.split(' ')[0]
     validate_command_and_respond(event, command)
+    add_points(r, event)
 end
 
 bot.run
