@@ -17,12 +17,12 @@ rc = Redis.new
 
 # Monitor a given channel for a message that starts with 'Going live!' and send 
 # the message contents to the configured Twitter account
-bot.message({in: ENV['ANNOUNCEMENTS_CHANNEL_ID'], start_with: 'Going live!'}) do |event|
-    twitter_client = set_twitter_client
+bot.message({in: ENV["ANNOUNCEMENTS_CHANNEL_ID"].to_i, start_with: 'Going live!'}) do |event|
+    twitter_client = get_twitter_client
     create_twitter_post(twitter_client, event)
 end
 
-# ## Monitor main channel for a new user to join and respond with a welcome message
+# Monitor main channel for a new user to join and respond with a welcome message
 bot.member_join do |event|
     welcome_new_member(event)
 end
