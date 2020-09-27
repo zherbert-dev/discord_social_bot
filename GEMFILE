@@ -3,4 +3,9 @@ source 'https://rubygems.org'
 gem 'discordrb'
 gem 'api-ai-ruby'
 gem 'twitter'
+<<<<<<< Updated upstream
 gem 'dotenv'
+=======
+gem 'dotenv'
+gem 'redis'
+>>>>>>> Stashed changes
