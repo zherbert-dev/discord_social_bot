@@ -6,6 +6,17 @@ require 'dotenv'
 require 'discordrb'
 require 'redis'
 require 'logger'
+require 'yaml'
+
+# Load config from file
+begin
+    CONFIG = YAML.load_file('config.yaml')
+rescue StandardError => e
+    puts e
+    puts 'Config file not found, this is fatal, running setup.'
+    `ruby bot_setup.rb`
+    exit
+end
 
 Dotenv.load
 
