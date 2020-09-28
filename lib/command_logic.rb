@@ -21,7 +21,7 @@ def validate_command_and_respond(event, command)
     when '!github'
         message = Response::GITHUB
     when '!rolld20'
-        message = Response::ROLL + rolld20
+        message = Response::ROLL + roll_d_twenty
     when '!pizza'
         message = Response::PIZZA_VIDEO
     when '!clear'
@@ -30,11 +30,16 @@ def validate_command_and_respond(event, command)
         message = Response::UNKNOWN_COMMAND
     end
 
-    if command.downcase == '!tweet'
-        twitter_client = get_twitter_client
-        message = event.message.content
-        message.slice!('!tweet ')
-        create_twitter_post(twitter_client, message)
+    if command.downcase == '!going-live'
+        if event.server.owner == event.message.author
+            twitter_client = get_twitter_client
+            message = event.message.content
+            message.slice!('!going-live ')
+            create_twitter_post(twitter_client, message)
+        else
+            message = Response::NOT_AUTHORIZED
+            respont_to_command(event, message)
+        end    
     else
         respond_to_command(event, message)
     end
@@ -50,7 +55,7 @@ def respond_to_command(event, message)
 end
 
 def roll_d_twenty
-    rand(1..20)
+    rand(1..20).to_s
 end
 
 def get_username_from_message_mentions (event)
