@@ -1,4 +1,5 @@
 require_relative '../modules/response'
+require_relative 'twitter_logic'
 
 def welcome_new_member(event)
     unless get_username_from_message_mentions.nil?
@@ -29,7 +30,14 @@ def validate_command_and_respond(event, command)
         message = Response::UNKNOWN_COMMAND
     end
 
-    respond_to_command(event, message)
+    if command.downcase == '!tweet'
+        twitter_client = get_twitter_client
+        message = event.message.content
+        message.slice!('!tweet ')
+        create_twitter_post(twitter_client, message)
+    else
+        respond_to_command(event, message)
+    end
 end
 
 def respond_to_command(event, message)

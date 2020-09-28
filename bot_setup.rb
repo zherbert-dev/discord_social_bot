@@ -10,8 +10,8 @@ class BotSetup
         unless File.exist?('config.yaml')
             puts 'No config file! Creating one now..'
             File.new('config.yaml', 'w+')
-            #exconfig = YAML.load_file('config.example.yaml')
-            #File.open('config.yaml', 'w') { |f| f.write exconfig.to_yaml }
+            exconfig = YAML.load_file('config.example.yaml')
+            File.open('config.yaml', 'w') { |f| f.write exconfig.to_yaml }
         end
         
         @config = YAML.load_file('config.yaml')
@@ -19,7 +19,6 @@ class BotSetup
     end
 
     def welcome(skip = false)
-        puts "inside welcome"
         unless skip
             puts 'Welcome to Discord Social Bot Setup'
             puts 'This really simple GUI will guide you in setting up the bot by yourself!'
@@ -42,13 +41,11 @@ class BotSetup
         puts 'What would you like to configure?'
         puts '[1] - Bot information (REQUIRED)'
         puts '[2] - API Keys'
-        puts '[3] - Bot Commands'
-        puts '[4] - Main Menu'
+        puts '[3] - Main Menu'
         input = gets.chomp
 
         configure('bot') if input == '1'
         configure('api') if input == '2'
-        configure('commands') if input == '3'
 
         welcome
     end
@@ -62,6 +59,11 @@ class BotSetup
             resp = gets.chomp.downcase
             resp == 'y' ? @config['enable_twitter'] = true : @config['enable_twitter'] = false
             
+            if @config['enable_twitter']    
+                puts 'Channel ID to tweet from'
+                @config['channel_id_to_tweet_from'] = gets.chomp
+            end
+
             puts 'It turns out you\'re done configuring bot settings!'
             save
             config
@@ -73,42 +75,18 @@ class BotSetup
                 @config['twitter_consumer_key'] = gets.chomp
 
                 puts 'Twitter Consumer Secret'
-                @config['twitter_consumer_Secret'] = gets.chomp
+                @config['twitter_consumer_secret'] = gets.chomp
 
                 puts 'Twitter Access Token'
                 @config['twitter_access_token'] = gets.chomp
 
                 puts 'Twitter Private Access Token'
-                @config['twitter_private_access_token'] = gets.chomp
+                @config['twitter_access_token_secret'] = gets.chomp
 
                 puts 'It turns out you\'re done configuring API settings!'
                 save
                 config
             end
-        end
-
-        if section == 'commands'
-            while true
-                index = 1
-                puts 'Enter name of command'
-                command_name = gets.chomp
-                @config["commands"]["command_#{index}"]["name"]["#{name}"]
-                puts 'Enter command description'
-                command_description = gets.chomp
-                @config["commands"]["command_#{index}"]["description"] = command_description
-                puts 'Enter command response'
-                command_response = gets.chomp
-                @config["commands"]["command_#{index}"]["response"] = command_response
-
-                puts "Add another command?"
-                puts "y/n"
-
-                if gets.chomp == 'n'
-                    false
-                end
-            end
-            save
-            config
         end
     end
     
