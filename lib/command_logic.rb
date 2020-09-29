@@ -30,11 +30,11 @@ def validate_command_and_respond(event, command)
         message = Response::UNKNOWN_COMMAND
     end
 
-    if command.downcase == '!going-live'
+    if command.downcase == '!live'
         if event.server.owner == event.message.author
             twitter_client = get_twitter_client
             message = event.message.content
-            message.slice!('!going-live ')
+            message.slice!('!live ')
             create_twitter_post(twitter_client, message)
         else
             message = Response::NOT_AUTHORIZED
