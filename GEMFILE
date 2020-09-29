@@ -6,4 +6,5 @@ gem 'twitter'
 gem 'dotenv'
 gem 'redis'
 gem 'yaml'
+gem 'json'
 

@@ -13,6 +13,9 @@ discord_bot_token:
 enable_twitter:
 channel_id_to_tweet_from:
 
+### COMMAND CONFIGURATION ###
+commands:
+
 ### API Configuration (Required if you enabled twitter)
 # Twitter API Keys
 twitter_consumer_key:

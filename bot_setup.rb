@@ -41,12 +41,13 @@ class BotSetup
         puts 'What would you like to configure?'
         puts '[1] - Bot information (REQUIRED)'
         puts '[2] - API Keys'
-        puts '[3] - Main Menu'
+        puts '[3] - Commands'
+        puts '[4] - Main Menu'
         input = gets.chomp
 
         configure('bot') if input == '1'
         configure('api') if input == '2'
-
+        configure('commands') if input == '3'
         welcome
     end
 
@@ -87,6 +88,31 @@ class BotSetup
                 save
                 config
             end
+        end
+
+        if section == 'commands'
+            commands = []
+            idx = 0
+
+            while true
+                puts 'Command Name' 
+                cmd_name = gets.chomp
+
+                puts 'Command Description'
+                cmd_desc = gets.chomp
+
+                puts 'Command Response'
+                cmd_resp = gets.chomp
+                command_h= {"name" => cmd_name, "description" => cmd_desc, "response" => cmd_resp}
+                commands.push(command_h)
+
+                puts 'Add another command? y/n'
+                gets.chomp.downcase == "y" ? true : break;
+            end
+
+            @config['commands'] = commands.to_yaml
+            save
+            config
         end
     end
     
