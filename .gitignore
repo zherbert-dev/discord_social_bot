@@ -1,4 +1,5 @@
 .env
+.vscode
 logs/
 GEMFILE.lock
 config.yaml

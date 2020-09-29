@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'discordrb'
 gem 'api-ai-ruby'
-gem 'twitter'
+gem 'discordrb'
 gem 'dotenv'
 gem 'redis'
+gem 'rubocop', '~> 0.92.0', require: false
+gem 'twitter'
 gem 'yaml'
-
