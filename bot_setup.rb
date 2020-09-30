@@ -28,25 +28,16 @@ class BotSetup
   end
 
   def config
-    puts 'Time to configure the bot.'
+    puts "Time to configure the bot.\nWhat would you like to configure?\n[1] - Bot information (REQUIRED)
+          \n[2] - API Keys\n[3] - Main Menu"
 
-    puts 'What would you like to configure?'
-    puts '[1] - Bot information (REQUIRED)'
-    puts '[2] - API Keys'
-    puts '[3] - Main Menu'
-    input = gets.chomp
+    configure_bot_settings if input == gets.chomp
+    save_and_return_to_config_menu
 
-    configure('bot') if input == '1'
-    configure('api') if input == '2'
+    configureapi_settings if input == gets.chomp
+    save_and_return_to_config_menu
 
     welcome
-  end
-
-  def configure(section)
-    configure_bot_settings(section)
-    save_and_return_to_config_menu
-    configure_api_settings(section)
-    save_and_return_to_config_menu
   end
 
   def save
@@ -65,26 +56,21 @@ class BotSetup
     File.open('config.yaml', 'w') { |f| f.write exconfig.to_yaml }
   end
 
-  def configure_bot_settings(section)
-    return unless section == 'bot'
-
+  def configure_bot_settings
     puts 'Please enter your discord bot token.'
     @config['discord_bot_token'] = gets.chomp
 
     puts 'Enable twitter posting, y/n?'
     @config['enable_twitter'] = gets.chomp.downcase == 'y'
 
-    if @config['enable_twitter']
-      puts 'Channel ID to tweet from'
-      @config['channel_id_to_tweet_from'] = gets.chomp
-    end
+    return unless @config['enable_twitter']
 
-    puts 'It turns out you\'re done configuring bot settings!'
+    puts 'Channel ID to tweet from'
+    @config['channel_id_to_tweet_from'] = gets.chomp
+    save_and_return_to_config_menu
   end
 
-  def configure_api_settings(section)
-    return unless section == 'api' && @config['enable_twitter']
-
+  def configure_api_settings
     puts 'Twitter Consumer Key'
     @config['twitter_consumer_key'] = gets.chomp
 
@@ -96,8 +82,6 @@ class BotSetup
 
     puts 'Twitter Private Access Token'
     @config['twitter_access_token_secret'] = gets.chomp
-
-    puts 'It turns out you\'re done configuring API settings!'
   end
 
   def save_and_return_to_config_menu

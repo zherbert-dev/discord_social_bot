@@ -37,36 +37,17 @@ module CommandLogic
 
   def self.validate_command_and_respond(event, command)
     cmd = command.downcase
-    message = case cmd
-              when '!help'
-                Response::HELP
-              when '!twitch'
-                Response::TWITCH
-              when '!github'
-                Response::GITHUB
-              when '!rolld20'
-                Response::ROLL + roll_d_twenty
-              when '!pizza'
-                Response::PIZZA_VIDEO
-              when '!clear'
-                Response::CLEAR
-              else
-                Response::UNKNOWN_COMMAND
-              end
+    message = command_response(command.downcase) unless cmd == '!live'
 
-    if command.downcase == '!live'
+    if cmd == '!live'
       if event.server.owner == event.message.author
-        twitter_client = TwitterLogic.twitter_client
-        message = event.message.content
-        message.slice!('!live ')
-        TwitterLogic.create_twitter_post(twitter_client, message)
+        send_tweet(event)
       else
         message = Response::NOT_AUTHORIZED
-        respond_to_command(event, message)
       end
-    else
-      respond_to_command(event, message)
     end
+
+    respond_to_command(event, message)
   end
 
   def self.respond_to_command(event, message)
@@ -79,5 +60,31 @@ module CommandLogic
 
   def self.get_username_from_message_mentions(event)
     event.message.mentions[0].username || nil
+  end
+
+  def self.send_tweet(event)
+    twitter_client = TwitterLogic.twitter_client
+    message = event.message.content
+    message.slice!('!live ')
+    TwitterLogic.create_twitter_post(twitter_client, message)
+  end
+
+  def self.command_response(command)
+    case command
+    when '!help'
+      Response::HELP
+    when '!twitch'
+      Response::TWITCH
+    when '!github'
+      Response::GITHUB
+    when '!rolld20'
+      Response::ROLL + roll_d_twenty
+    when '!pizza'
+      Response::PIZZA_VIDEO
+    when '!clear'
+      Response::CLEAR
+    else
+      Response::UNKNOWN_COMMAND
+    end
   end
 end
