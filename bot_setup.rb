@@ -8,8 +8,12 @@ class BotSetup
       puts 'YAML not found! Is your ruby ok?'
       exit
     end
+    begin
+      @config = YAML.load_file('config.yaml')
+    rescue
+      @config = {}
+    end
 
-    @config = YAML.load_file('config.yaml')
     exit if @config == false
   end
 
