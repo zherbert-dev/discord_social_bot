@@ -2,27 +2,28 @@
 
 module LevelUpLogic
   def self.add_points(r_conn, event)
-    user = event.user
-    existing_user = r_conn.hmget(user.id.to_s, :user_name)[0]
+    existing_user = get_existing_user(r_conn, event.user)
 
     if !existing_user.nil?
-      new_points = r_conn.hincrby(user.id.to_s, :points, 1)
-      check_points(r, user, new_points, event)
+      new_points = r_conn.hincrby(event.user.id.to_s, :points, 1)
+      check_points(r, new_points, event)
     else
-      begin
-        r_conn.hmset(user.id.to_s, :user_name, event.user.username, :points, 1, :level, 0)
-      rescue StandardError => e
-        logger.error e.message
-        logger.error e.backtrace
-      end
+      set_new_user(r_conn, event.user)
     end
   end
 
-  def self.check_points(r_conn, user, new_points, event)
-    unless [LEVEL::ONE, LEVEL::TWO, LEVEL::THREE, LEVEL::FOUR, LEVEL::FIVE,
-            LEVEL::SIX, LEVEL::SEVEN, LEVEL::EIGHT, LEVEL::NINE, LEVEL::TEN].include? new_points; return; end
+  def self.get_existing_user(r_conn, user)
+    r_conn.hmget(user.id.to_s, :user_name)[0]
+  end
 
-    level_up(r_conn, user, event)
+  def self.set_new_user(r_conn, user)
+    r_conn.hmset(user.id.to_s, :user_name, user.username, :points, 1, :level, 0)
+  end
+
+  def self.check_points(r_conn, new_points, event)
+    return unless [5, 50, 100, 500, 1000, 5000, 10_000, 15_000, 50_000, 100_000].include? new_points
+
+    level_up(r_conn, event.user, event)
   end
 
   def self.level_up(r_conn, user, event)
