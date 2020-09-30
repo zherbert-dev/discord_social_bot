@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
+# Modules
+require './modules/command_logic.rb'
+require './modules/level_up_logic.rb'
+
+# Gems
 require 'discordrb'
 require 'redis'
 require 'logger'
 require 'yaml'
 require 'twitter'
 
-module DiscordSocialBot
-  Dir['modules/*.rb'].each { |mod| load mod }
+class SocialDiscordBot
+  # Include Modules
+  include CommandLogic
+  include LevelUpLogic
 
   # Load config from file
   begin
@@ -22,7 +29,7 @@ module DiscordSocialBot
   log.level = Logger::WARN
 
   bot = Discordrb::Bot.new token: CONFIG['discord_bot_token'], ignore_bots: true
-  rc = Redis.new
+  redis_conn = Redis.new
 
   # Monitor main channel for a new user to join and respond with a welcome message
   bot.member_join do |event|
@@ -34,8 +41,10 @@ module DiscordSocialBot
   bot.message(start_with: '!') do |event|
     command = event.message.content.split(' ')[0]
     CommandLogic.validate_command_and_respond(event, command)
-    LevelUpLogic.add_points(rc, event)
+    LevelUpLogic.add_points(redis_conn, event)
   end
 
   bot.run
 end
+
+SocialDiscordBot.new
