@@ -8,12 +8,6 @@ class BotSetup
       puts 'YAML not found! Is your ruby ok?'
       exit
     end
-    unless File.exist?('config.yaml')
-      puts 'No config file! Creating one now..'
-      File.new('config.yaml', 'w+')
-      exconfig = YAML.load_file('config.example.yaml')
-      File.open('config.yaml', 'w') { |f| f.write exconfig.to_yaml }
-    end
 
     @config = YAML.load_file('config.yaml')
     exit if @config == false
@@ -34,42 +28,51 @@ class BotSetup
   end
 
   def config
-    puts 'Time to configure the bot.'
+    puts "Time to configure the bot.\nWhat would you like to configure?\n[1] - Bot information (REQUIRED)
+          \n[2] - API Keys\n[3] - Main Menu"
+    option = gets.chomp
 
-    puts 'What would you like to configure?'
-    puts '[1] - Bot information (REQUIRED)'
-    puts '[2] - API Keys'
-    puts '[3] - Main Menu'
-    input = gets.chomp
-
-    configure('bot') if input == '1'
-    configure('api') if input == '2'
+    if option == '1'
+      configure_bot_settings
+      save_and_return_to_config_menu
+    elsif option == '2'
+      configure_api_settings
+      save_and_return_to_config_menu
+    end
 
     welcome
   end
 
-  def configure(section)
-    if section == 'bot'
-      puts 'Please enter your discord bot token.'
-      @config['discord_bot_token'] = gets.chomp
+  def save
+    File.open('config.yaml', 'w') { |f| f.write @config.to_yaml }
+  rescue StandardError => e
+    puts 'uh oh, there was an error saving your config. Report the following error to herberzt-dev on github'
+    puts e
+  end
 
-      puts 'Enable twitter posting, y/n?'
-      resp = gets.chomp.downcase
-      @config['enable_twitter'] = resp == 'y'
+  def check_if_config_exists
+    return if File.exist?('config.yaml')
 
-      if @config['enable_twitter']
-        puts 'Channel ID to tweet from'
-        @config['channel_id_to_tweet_from'] = gets.chomp
-      end
+    puts 'No config file! Creating one now..'
+    File.new('config.yaml', 'w+')
+    exconfig = YAML.load_file('config.example.yaml')
+    File.open('config.yaml', 'w') { |f| f.write exconfig.to_yaml }
+  end
 
-      puts 'It turns out you\'re done configuring bot settings!'
-      save
-      config
-    end
+  def configure_bot_settings
+    puts 'Please enter your discord bot token.'
+    @config['discord_bot_token'] = gets.chomp
 
-    return unless section == 'api'
+    puts 'Enable twitter posting, y/n?'
+    @config['enable_twitter'] = gets.chomp.downcase == 'y'
+
     return unless @config['enable_twitter']
 
+    puts 'Channel ID to tweet from'
+    @config['channel_id_to_tweet_from'] = gets.chomp
+  end
+
+  def configure_api_settings
     puts 'Twitter Consumer Key'
     @config['twitter_consumer_key'] = gets.chomp
 
@@ -81,17 +84,11 @@ class BotSetup
 
     puts 'Twitter Private Access Token'
     @config['twitter_access_token_secret'] = gets.chomp
-
-    puts 'It turns out you\'re done configuring API settings!'
-    save
-    config
   end
 
-  def save
-    File.open('config.yaml', 'w') { |f| f.write @config.to_yaml }
-  rescue StandardError => e
-    puts 'uh oh, there was an error saving your config. Report the following error to herberzt-dev on github'
-    puts e
+  def save_and_return_to_config_menu
+    save
+    config
   end
 end
 
