@@ -30,12 +30,15 @@ class BotSetup
   def config
     puts "Time to configure the bot.\nWhat would you like to configure?\n[1] - Bot information (REQUIRED)
           \n[2] - API Keys\n[3] - Main Menu"
+    option = gets.chomp
 
-    configure_bot_settings if input == gets.chomp
-    save_and_return_to_config_menu
-
-    configureapi_settings if input == gets.chomp
-    save_and_return_to_config_menu
+    if option == '1'
+      configure_bot_settings
+      save_and_return_to_config_menu
+    elsif option == '2'
+      configure_api_settings
+      save_and_return_to_config_menu
+    end
 
     welcome
   end
@@ -67,7 +70,6 @@ class BotSetup
 
     puts 'Channel ID to tweet from'
     @config['channel_id_to_tweet_from'] = gets.chomp
-    save_and_return_to_config_menu
   end
 
   def configure_api_settings
