@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 # frozen_string_literal: true
 
 require_relative 'twitter_logic.rb'
@@ -45,9 +47,8 @@ module CommandLogic
       else
         message = Response::NOT_AUTHORIZED
       end
-    else
-      respond_to_command(event, message)
     end
+    respond_to_command(event, message)
   end
 
   def self.respond_to_command(event, message)

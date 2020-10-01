@@ -2,7 +2,7 @@
 
 module TwitterLogic
   require 'yaml'
-  CONFIG = YAML.load_file('config.yaml')
+  CONFIG = YAML.load_file(File.join('app', 'config.yaml'))
 
   def self.twitter_client
     Twitter::REST::Client.new do |config|
