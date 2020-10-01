@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 # Modules
-require '/modules/command_logic.rb'
-require '/modules/level_up_logic.rb'
+require_relative 'modules/command_logic.rb'
+require_relative 'modules/level_up_logic.rb'
 
 # Gems
 require 'discordrb'
@@ -20,8 +20,8 @@ class SocialDiscordBot
   begin
     CONFIG = YAML.load_file('config.yaml')
   rescue StandardError => e
-    puts e
-    puts 'Config file not found, this is fatal!\n Please run setup.rb to configure application.'
+    puts "ERROR: #{e}"
+    puts "Config file not found, this is fatal!\n Please run setup.rb to configure application."
     exit
   end
 
