@@ -12,7 +12,7 @@
 1. Create a bot in discord.
 1. Clone repository.
 1. run `$ bundle` to setup the gems.
-1. run `$ ruby bot_setup.rb` to configure the app (This is where the twitter and discord keys will get set).
+1. run `$ ruby app/scripts/bot_setup.rb` to configure the app (This is where the twitter and discord keys will get set).
 1. run `$ redis-server usr/local/etc/redis.conf` (Make sure you have installed redis).
 1. run `$ ruby bot_runner.rb`.
 
