@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'byebug'
+
 class BotSetup
   def initialize
     begin
@@ -95,14 +97,18 @@ class BotSetup
   end
 
   def configure_commands
+    cmd_hash = {}
+
     puts 'Enter command name'
-    @config['commands']['names'].push(gets.chomp)
+    cmd_hash['name'] = gets.chomp
 
     puts 'Enter command description'
-    @config['commands']['descriptions'].push(gets.chomp)
+    cmd_hash['description'] = gets.chomp
 
     puts 'Enter command response'
-    @config['commands']['responses'].push(gets.chomp)
+    cmd_hash['response'] = gets.chomp
+
+    @config['commands'].push(cmd_hash)
 
     save
 

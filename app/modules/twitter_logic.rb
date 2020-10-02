@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module TwitterLogic
-  require 'yaml'
-  CONFIG = YAML.load_file(File.join('app', 'config.yaml'))
+  require 'json'
+  config_file = File.read('app/config/config.json')
+  CONFIG = JSON.parse(config_file)
 
   def self.twitter_client
     Twitter::REST::Client.new do |config|
