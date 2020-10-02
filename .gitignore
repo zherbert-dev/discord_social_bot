@@ -2,4 +2,5 @@
 .vscode
 logs/
 GEMFILE.lock
+config.json
 config.yaml

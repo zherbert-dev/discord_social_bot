@@ -3,13 +3,15 @@
 class BotSetup
   def initialize
     begin
-      require 'yaml'
+      require 'json'
     rescue LoadError
-      puts 'YAML not found! Is your ruby ok?'
+      puts 'JSON not found! Is your ruby ok?'
       exit
     end
+
     begin
-      @config = YAML.load_file('config.yaml')
+      config_file = File.read('app/config/config.json')
+      @config = JSON.parse(config_file)
     rescue
       @config = {}
     end
@@ -32,8 +34,12 @@ class BotSetup
   end
 
   def config
-    puts "Time to configure the bot.\nWhat would you like to configure?\n[1] - Bot information (REQUIRED)
-          \n[2] - API Keys\n[3] - Main Menu"
+    puts "Welcome to the configuration menu.\nWhat would you like to configure?"
+    puts '[1] - Bot information (REQUIRED)'
+    puts '[2] - API Keys'
+    puts '[3] - Commands'
+    puts '[4] - Main Menu'
+
     option = gets.chomp
 
     if option == '1'
@@ -42,52 +48,66 @@ class BotSetup
     elsif option == '2'
       configure_api_settings
       save_and_return_to_config_menu
+    elsif option == '3'
+      configure_commands
+      save_and_return_to_config_menu
     end
 
     welcome
   end
 
   def save
-    File.open('config.yaml', 'w') { |f| f.write @config.to_yaml }
+    File.open('app/config/config.json', 'w') { |f| f.write @config.to_json }
   rescue StandardError => e
     puts 'uh oh, there was an error saving your config. Report the following error to herberzt-dev on github'
     puts e
   end
 
   def check_if_config_exists
-    return if File.exist?('config.yaml')
+    return if File.exist?('app/config/config.json')
 
     puts 'No config file! Creating one now..'
-    File.new('config.yaml', 'w+')
-    exconfig = YAML.load_file('config.example.yaml')
-    File.open('config.yaml', 'w') { |f| f.write exconfig.to_yaml }
+    File.new('app/config/config.json', 'w+')
+    exconfig = JSON.load_file('app/config/config.example.json')
+    File.open('app/config/config.json', 'w') { |f| f.write exconfig.to_json }
   end
 
   def configure_bot_settings
     puts 'Please enter your discord bot token.'
-    @config['discord_bot_token'] = gets.chomp
+    @config['bot_settings']['discord_bot_token'] = gets.chomp
 
     puts 'Enable twitter posting, y/n?'
-    @config['enable_twitter'] = gets.chomp.downcase == 'y'
-
-    return unless @config['enable_twitter']
-
-    puts 'Channel ID to tweet from'
-    @config['channel_id_to_tweet_from'] = gets.chomp
+    @config['bot_settings']['enable_twitter'] = gets.chomp.downcase == 'y'
   end
 
   def configure_api_settings
     puts 'Twitter Consumer Key'
-    @config['twitter_consumer_key'] = gets.chomp
+    @config['api_settings']['twitter']['twitter_consumer_key'] = gets.chomp
 
     puts 'Twitter Consumer Secret'
-    @config['twitter_consumer_secret'] = gets.chomp
+    @config['api_settings']['twitter']['twitter_consumer_secret'] = gets.chomp
 
     puts 'Twitter Access Token'
-    @config['twitter_access_token'] = gets.chomp
+    @config['api_settings']['twitter']['twitter_access_token'] = gets.chomp
 
     puts 'Twitter Private Access Token'
-    @config['twitter_access_token_secret'] = gets.chomp
+    @config['api_settings']['twitter']['twitter_access_token_secret'] = gets.chomp
+  end
+
+  def configure_commands
+    puts 'Enter command name'
+    @config['commands']['names'].push(gets.chomp)
+
+    puts 'Enter command description'
+    @config['commands']['descriptions'].push(gets.chomp)
+
+    puts 'Enter command response'
+    @config['commands']['responses'].push(gets.chomp)
+
+    save
+
+    puts 'Add another command? y/n'
+    gets.chomp == 'y' ? configure_commands : config
   end
 
   def save_and_return_to_config_menu

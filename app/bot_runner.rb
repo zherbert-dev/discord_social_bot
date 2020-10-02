@@ -8,7 +8,7 @@ require_relative 'modules/level_up_logic.rb'
 require 'discordrb'
 require 'redis'
 require 'logger'
-require 'yaml'
+require 'json'
 require 'twitter'
 
 class SocialDiscordBot
@@ -18,10 +18,10 @@ class SocialDiscordBot
 
   # Load config from file
   begin
-    CONFIG = YAML.load_file('config.yaml')
+    CONFIG = JSON.load_file('app/config', 'config.json')
   rescue StandardError => e
     puts "ERROR: #{e}"
-    puts "Config file not found, this is fatal!\n Please run setup.rb to configure application."
+    puts "Config file not found, this is fatal!\n Please run scripts/setup.rb to configure application."
     exit
   end
 

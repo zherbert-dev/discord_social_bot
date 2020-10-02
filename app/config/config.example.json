@@ -1,0 +1,19 @@
+{
+    "api_settings": {
+        "twitter": {
+            "twitter_consumer_key": "",
+            "twitter_consumer_secret": "",
+            "twitter_access_token": "",
+            "twitter_private_access_token": ""
+        }
+    },
+    "bot_settings": {
+        "discord_bot_token": "",
+        "enable_twitter": ""
+    },
+    "commands": {
+        "names": [],
+        "descriptions": [],
+        "responses": []
+    }
+}
