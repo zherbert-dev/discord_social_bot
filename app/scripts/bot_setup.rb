@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'byebug'
-
 class BotSetup
   def initialize
     begin
@@ -12,6 +10,7 @@ class BotSetup
     end
 
     begin
+      check_if_config_exists
       config_file = File.read('app/config/config.json')
       @config = JSON.parse(config_file)
     rescue
@@ -43,7 +42,7 @@ class BotSetup
     puts '[4] - Main Menu'
 
     option = gets.chomp
-
+    
     if option == '1'
       configure_bot_settings
       save_and_return_to_config_menu
@@ -70,7 +69,9 @@ class BotSetup
 
     puts 'No config file! Creating one now..'
     File.new('app/config/config.json', 'w+')
-    exconfig = JSON.load_file('app/config/config.example.json')
+    config_file = File.read('app/config/config.json')
+    exconfig_file = File.read('app/config/config.example.json')
+    exconfig = JSON.parse(exconfig_file)
     File.open('app/config/config.json', 'w') { |f| f.write exconfig.to_json }
   end
 
@@ -109,7 +110,6 @@ class BotSetup
     cmd_hash['response'] = gets.chomp
 
     @config['commands'].push(cmd_hash)
-
     save
 
     puts 'Add another command? y/n'

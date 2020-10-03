@@ -10,28 +10,37 @@ class Command
   @name = ''
   @description = ''
   @response = ''
+  @@count = 0
+  @@instances = []
 
   def initialize(name, desc, resp)
     @name = name
     @description = desc
     @response = resp
+    @@count += 1
+    @@instances << self
   end
 
-  def validate_and_respond(command_string, available_commands, event)
+  def self.validate_and_respond(command_string, event)
     # remove ! from front of command_string
     command_string[0] = ''
     valid = false
-
-    available_commands.each do |ac|
-      if ac.name == command_string
+    
+    all.each do |ac|
+      if ac.instance_variable_get(:@name) == command_string
         valid = true
-        respond(ac.response, event)
+        respond(ac.instance_variable_get(:@response), event)
       end
     end
+    
     respond(Response::UNKNOWN_COMMAND, event) unless valid
   end
 
-  def respond(response, event)
+  def self.respond(response, event)
     event.channel.send_message response
+  end
+
+  def self.all
+    @@instances
   end
 end

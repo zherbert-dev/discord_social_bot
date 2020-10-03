@@ -32,17 +32,15 @@ class SocialDiscordBot
   redis_conn = Redis.new
   
   ## create commands from config
-  @available_commands = []
   CONFIG['commands'].each do |c|
     cmd = Command.new(c['name'], c['description'], c['response'])
-    @available_commands.push(cmd)
   end
 
   # Bot Commands and Response
   # Commands will be messages that start with '!'
   bot.message(start_with: '!') do |event|
-    command_string = event.message.content.split(' ')[0]
-    Command.validate(command_string, @available_commands)
+    entered_command = event.message.content.split(' ')[0]
+    Command.validate_and_respond(entered_command, event)
     LevelUpLogic.add_points(redis_conn, event)
   end
 
